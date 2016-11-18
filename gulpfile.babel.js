@@ -9,6 +9,18 @@ import tsCompiler from 'gulp-typescript';
 import validatePipeline from 'pipeline-validate-js';
 import webserver from 'gulp-webserver';
 
+import { Server } from 'karma';
+
+/**
+ * Run test once and exit
+ */
+gulp.task('test', function (done) {
+  new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done).start();
+});
+
 
 const serverOptions = {
   fallback: './index.html',
@@ -75,6 +87,15 @@ gulp.task('build', ['clean'], function () {
   );
 });
 
+gulp.task('test:tdd', function (done) {
+  var server = new Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: false,
+    autoWatch: true
+  }, done);
+
+  server.start();
+});
 
 gulp.task('serve', function () {
   return gulp.src(serverOptions.root)
